@@ -9,26 +9,53 @@
 </template>
 
 <script setup>
-// For declaring states
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 import TheForm from "./components/TheForm.vue";
 import TheList from "./components/TheList.vue";
 import TheHeader from "./components/TheHeader.vue";
-
-let listItems = reactive([
-  { title: "Code Review!", id: 1, isDone: false },
-  { title: "Assign backlogs !", id: 2, isDone: true },
-]);
-
-function onNewItemAdded(newItem) {
-  listItems.push({ ...newItem });
+import ApiService from "./core/services/ApiService";
+// State declaration
+let listItems = reactive([]);
+// Component Life cycle
+onMounted(async () => {
+  try {
+    const response = await ApiService.get("todos");
+    listItems.push(...response.data);
+  } catch (error) {
+    alert("Faild to fetch!");
+    console.error(error);
+  }
+});
+// Methods
+async function onNewItemAdded(newItem) {
+  try {
+    await ApiService.post("todos", newItem);
+    listItems.push({ ...newItem });
+  } catch (error) {
+    alert("Faild To Add!");
+    console.error(error);
+  }
 }
-function changeStateHandler(itemId) {
-  const listItemIndex = listItems.findIndex((item) => item.id === itemId);
-  listItems[listItemIndex].isDone = !listItems[listItemIndex].isDone;
+async function removeItemHandler(itemId) {
+  try {
+    await ApiService.delete(`todos/${itemId}`);
+    const listItemIndex = listItems.findIndex((item) => item.id === itemId);
+    listItems.splice(listItemIndex, 1);
+  } catch (error) {
+    alert("Faild To Delete!");
+    console.error(error);
+  }
 }
-function removeItemHandler(itemId) {
-  const listItemIndex = listItems.findIndex((item) => item.id === itemId);
-  listItems.splice(listItemIndex, 1);
+async function changeStateHandler(itemId) {
+  try {
+    const listItemIndex = listItems.findIndex((item) => item.id === itemId);
+    await ApiService.update("todos", itemId, {
+      isDone: !listItems[listItemIndex].isDone,
+    });
+    listItems[listItemIndex].isDone = !listItems[listItemIndex].isDone;
+  } catch (error) {
+    alert("Failed to Change the Status!");
+    console.error(error);
+  }
 }
 </script>
