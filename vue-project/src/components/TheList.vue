@@ -23,7 +23,6 @@ ul {
   list-style: none;
   margin: 0 auto;
   margin-top: 3rem;
-  /* border: 1px solid #000; */
   box-shadow: 0 10px 10px rgba(170, 170, 170, 0.325);
   padding: 1rem;
   border-radius: 6px;

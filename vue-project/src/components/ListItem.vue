@@ -2,10 +2,10 @@
   <li :class="`${props.isDone && 'done'}`">
     <span>{{ props.title }}</span>
     <div class="item-actions">
-      <button @click="() => emits('remove-item', props.id)" class="danger">
+      <button @click="emits('remove-item', props.id)" class="danger">
         Remove
       </button>
-      <button class="info" @click="() => emits('change-state', props.id)">
+      <button class="info" @click="emits('change-state', props.id)">
         Change State!
       </button>
     </div>
@@ -30,20 +30,19 @@ li {
 
 .done::after {
   content: "DONE!";
-  font-weight: 700;
+  color: #fff;
   font-size: 2rem;
+  font-weight: 700;
   letter-spacing: 6px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  color: #fff;
+  justify-content: center;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  /* border: 0.5px solid #1864ab; */
   background-color: rgba(24, 100, 171, 0.6);
 }
 
